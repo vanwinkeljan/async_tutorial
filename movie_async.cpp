@@ -59,7 +59,7 @@ int main() {
 	double delta = 1.0 / (double) frames;
 
 
-	auto start = std::chrono::steady_clock::now();
+	auto start = std::chrono::monotonic_clock::now();
 	for(int id = 0; id <= frames; ++id) {
 		double z = (double) id * delta;
 		futures.push_back(std::async(make_perlin_noise, id, id_width, z));
@@ -68,7 +68,7 @@ int main() {
 	for(auto &e : futures) {
 	    e.get();
 	}	
-	auto end = std::chrono::steady_clock::now();
+	auto end = std::chrono::monotonic_clock::now();
 
 	auto diff = end - start;
 	std::cout << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;
