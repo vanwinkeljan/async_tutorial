@@ -80,7 +80,7 @@ void drive_make_perlin_noise(int left, int right, int id_width, double delta) {
 
 int main() {
 	std::vector<std::future<void>> futures;
-	int frames = 1800;
+	int frames = 100;
 	int id_width = 4;
 	double delta = 1.0 / (double) frames;
 
@@ -89,15 +89,17 @@ int main() {
 
     std::vector<int>bnd = bounds(parts, frames);
 
-	auto start = std::chrono::steady_clock::now();
+	auto start = std::chrono::monotonic_clock::now();
 	for (int i = 0; i < parts; ++i) {
-		futures.push_back(std::async(drive_make_perlin_noise, bnd[i], bnd[i + 1], id_width, delta));
+                // See movie_async.cpp for reason
+		//futures.push_back(std::async(drive_make_perlin_noise, bnd[i], bnd[i + 1], id_width, delta));
+		futures.push_back(std::async(std::launch::async,drive_make_perlin_noise, bnd[i], bnd[i + 1], id_width, delta));
 	}
 
 	for(auto &e : futures) {
 	    e.get();
 	}	
-	auto end = std::chrono::steady_clock::now();
+	auto end = std::chrono::monotonic_clock::now();
 
 	auto diff = end - start;
 	std::cout << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;

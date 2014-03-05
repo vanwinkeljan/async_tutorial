@@ -54,7 +54,8 @@ void make_perlin_noise(int id, int id_width, double z) {
 
 int main() {
 	std::vector<std::future<void>> futures;
-	int frames = 1800;
+	//int frames = 1800;
+	int frames = 100;
 	int id_width = 4;
 	double delta = 1.0 / (double) frames;
 
@@ -62,7 +63,12 @@ int main() {
 	auto start = std::chrono::monotonic_clock::now();
 	for(int id = 0; id <= frames; ++id) {
 		double z = (double) id * delta;
-		futures.push_back(std::async(make_perlin_noise, id, id_width, z));
+                /* Current version of GLIBC contains a bug/limitation
+                 * wch will not lunch a new thread if no launch policy is specified
+                 * http://gcc.gnu.org/bugzilla/show_bug.cgi?id=51617
+                 */
+		//futures.push_back(std::async(make_perlin_noise, id, id_width, z));
+		futures.push_back(std::async(std::launch::async,make_perlin_noise, id, id_width, z));
 	}
 
 	for(auto &e : futures) {

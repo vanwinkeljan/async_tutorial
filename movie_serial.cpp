@@ -50,16 +50,16 @@ void make_perlin_noise(int id, int id_width, double z) {
 }
 
 int main() {
-	int frames = 1800;
+	int frames = 100;
 	int id_width = 4;
 	double delta = 1.0 / (double) frames;
 
-	auto start = std::chrono::steady_clock::now();
+	auto start = std::chrono::monotonic_clock::now();
 	for(int id = 0; id <= frames; ++id) {
 		double z = (double) id * delta;
 		make_perlin_noise(id, id_width, z);
 	}
-	auto end = std::chrono::steady_clock::now();
+	auto end = std::chrono::monotonic_clock::now();
 
 	auto diff = end - start;
 	std::cout << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;

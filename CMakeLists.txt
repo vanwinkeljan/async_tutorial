@@ -2,9 +2,20 @@ project (lttng_async_tutorial)
 
 cmake_minimum_required (VERSION 2.8)
 
+#Dependencies
 find_package( Threads )
+
+# full async
 add_executable (movie_async PerlinNoise movie_async ppm)
-target_link_libraries( movie_async ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+target_link_libraries(movie_async ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+
+# 2 async
+add_executable (movie_async_ctrl_threads PerlinNoise ppm movie_async_ctrl_threads)
+target_link_libraries(movie_async_ctrl_threads ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+
+# serial 
+add_executable (movie_serial PerlinNoise ppm movie_serial)
+target_link_libraries(movie_serial ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
 
 # Check for C++11 support
 include(CheckCXXCompilerFlag)
