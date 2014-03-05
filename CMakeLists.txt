@@ -2,8 +2,11 @@ project (lttng_async_tutorial)
 
 cmake_minimum_required (VERSION 2.8)
 
+find_package( Threads )
 add_executable (movie_async PerlinNoise movie_async ppm)
+target_link_libraries( movie_async ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
 
+# Check for C++11 support
 include(CheckCXXCompilerFlag)
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11 -std=gnu++11" COMPILER_SUPPORTS_CXX11)
@@ -17,5 +20,3 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package( Threads )
-target_link_libraries( movie_async ${CMAKE_THREAD_LIBS_INIT} )
