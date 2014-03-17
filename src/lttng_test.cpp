@@ -9,6 +9,11 @@
 #include "ppm.h"
 #include "PerlinNoise.h"
 
+// lttng-ust trace points
+#define TRACEPOINT_DEFINE
+#define TRACEPOINT_PROBE_DYNAMIC_LINKAGE
+#include "tp_lttng_test.h"
+
 void generateNoise(const PerlinNoise& pn, 
                    unsigned int width, 
                    unsigned int height,
@@ -91,6 +96,8 @@ void createImage( unsigned int nbrOfThreads,
 
 int main ( int arc, char **argv ) {
 
+  tracepoint(com_vanwinkeljan_lttng_test_main, info_message, "Entering main of lttng_test");
+
   const unsigned int MAX_NBR_OF_THREADS = 4;
   const double Z = 0.5;
   const unsigned int WIDTH  = 1280;
@@ -99,9 +106,10 @@ int main ( int arc, char **argv ) {
   for(unsigned int nbrOfThreads = 1; nbrOfThreads <= MAX_NBR_OF_THREADS; ++nbrOfThreads){
     std::stringstream fname;
     fname << "img_" << nbrOfThreads << ".ppm"; 
-
     auto start = std::chrono::monotonic_clock::now();
+    tracepoint(com_vanwinkeljan_lttng_test_main, test_run_message, "Starting test",nbrOfThreads);
     createImage(nbrOfThreads,fname.str(), WIDTH, HEIGHT, Z);
+    tracepoint(com_vanwinkeljan_lttng_test_main, test_run_message, "Test Done",nbrOfThreads);
     auto end = std::chrono::monotonic_clock::now();
     auto diff = end - start;
     std::cout << "Nbr. of threads " << nbrOfThreads << " duration = " << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;

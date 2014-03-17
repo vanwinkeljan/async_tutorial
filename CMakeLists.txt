@@ -8,8 +8,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}")
 #Dependencies
 find_package(Threads REQUIRED) 
 
+find_package(PkgConfig)
+include(UseLttngGenTp)
+pkg_check_modules(LTTNG REQUIRED lttng-ust)
+include_directories(${LTTNG_INCLUDE_DIRS})
+link_directories(${LTTNG_LIBRARY_DIRS})
+
 # include dir
-include_directories(${PROJECT_SOURCE_DIR}/include ${LIBBENCHMARK_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/include) 
 
 # Source files
 set ( base_SOURCES src/PerlinNoise src/ppm )
@@ -17,8 +23,15 @@ set ( base_SOURCES src/PerlinNoise src/ppm )
 # Libs 
 set ( base_LIBS ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
-#lttng_test.cpp
-add_executable (lttng_test ${base_SOURCES} src/lttng_test)
+# Generate trace points
+add_lttng_gen_tp(NAME lttng_test)
+
+#lltng tracepoint libs
+add_library (tp_lttng_test SHARED tp_lttng_test.c)
+target_link_libraries(tp_lttng_test ${LTTNG_LIBRARIES})
+
+#Exec lttng_test
+add_executable (lttng_test ${base_SOURCES} src/lttng_test tp_lttng_test.h)
 target_link_libraries(lttng_test ${base_LIBS} )
 
 # Check for C++11 support

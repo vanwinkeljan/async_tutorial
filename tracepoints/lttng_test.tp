@@ -1,0 +1,32 @@
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_main,
+  info_message,
+  TP_ARGS(const char *, text),
+  TP_FIELDS(
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,message,TRACE_INFO)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_main,
+  test_run_message,
+  TP_ARGS(const char *, text,
+          unsigned int, nbrOfThreads),
+  TP_FIELDS(
+    ctf_string(message, text)
+    ctf_integer(unsigned int, nbrOfThreads,nbrOfThreads) 
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,test_run_message,TRACE_INFO)
+
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_main,
+  debug_message,
+  TP_ARGS(const char *, text),
+  TP_FIELDS(
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,debug_message,TRACE_DEBUG_MODULE)
