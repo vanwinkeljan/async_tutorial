@@ -2,20 +2,24 @@ project (lttng_async_tutorial)
 
 cmake_minimum_required (VERSION 2.8)
 
+# Add project dir to module search path
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}")
+
 #Dependencies
-find_package( Threads )
+find_package(Threads REQUIRED) 
 
-# full async
-add_executable (movie_async PerlinNoise movie_async ppm)
-target_link_libraries(movie_async ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+# include dir
+include_directories(${PROJECT_SOURCE_DIR}/include ${LIBBENCHMARK_INCLUDE_DIRS})
 
-# 2 async
-add_executable (movie_async_ctrl_threads PerlinNoise ppm movie_async_ctrl_threads)
-target_link_libraries(movie_async_ctrl_threads ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+# Source files
+set ( base_SOURCES src/PerlinNoise src/ppm )
 
-# serial 
-add_executable (movie_serial PerlinNoise ppm movie_serial)
-target_link_libraries(movie_serial ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
+# Libs 
+set ( base_LIBS ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+
+#lttng_test.cpp
+add_executable (lttng_test ${base_SOURCES} src/lttng_test)
+target_link_libraries(lttng_test ${base_LIBS} )
 
 # Check for C++11 support
 include(CheckCXXCompilerFlag)

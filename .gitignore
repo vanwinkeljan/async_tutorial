@@ -5,10 +5,8 @@
 ###############################################################################
 # BEGIN PROJECT ignore
 
-movie_async
-movie_async_ctrl_threads
-movie_serial
 *.ppm
+lttng_test
 
 # END PROJECT ignore
 ###############################################################################
