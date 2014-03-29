@@ -1,0 +1,53 @@
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_ppm,
+  create,
+  TP_ARGS(unsigned int, width, 
+          unsigned int, height,
+          const char *, filename ),
+  TP_FIELDS(
+    ctf_integer(int, width, width)
+    ctf_integer(int,height, height)
+    ctf_string(filename,filename)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_ppm,create,TRACE_DEBUG_FUNCTION)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_ppm,
+  read,
+  TP_ARGS(const char *, filename ),
+  TP_FIELDS(
+    ctf_string(filename,filename)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_ppm,read,TRACE_DEBUG_FUNCTION)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_ppm,
+  write,
+  TP_ARGS(const char *, filename ),
+  TP_FIELDS(
+    ctf_string(filename,filename)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_ppm,write,TRACE_DEBUG_FUNCTION)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_ppm,
+  debug_message,
+  TP_ARGS(const char *, text),
+  TP_FIELDS(
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_ppm,debug_message,TRACE_DEBUG)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_ppm,
+  error_message,
+  TP_ARGS(const char *, text),
+  TP_FIELDS(
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_ppm,error_message,TRACE_ERR)
