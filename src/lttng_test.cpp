@@ -106,11 +106,11 @@ int main ( int arc, char **argv ) {
   for(unsigned int nbrOfThreads = 1; nbrOfThreads <= MAX_NBR_OF_THREADS; ++nbrOfThreads){
     std::stringstream fname;
     fname << "img_" << nbrOfThreads << ".ppm"; 
-    auto start = std::chrono::monotonic_clock::now();
+    auto start = std::chrono::steady_clock::now();
     tracepoint(com_vanwinkeljan_lttng_test_main, test_run_message, "Starting test",nbrOfThreads);
     createImage(nbrOfThreads,fname.str(), WIDTH, HEIGHT, Z);
     tracepoint(com_vanwinkeljan_lttng_test_main, test_run_message, "Test Done",nbrOfThreads);
-    auto end = std::chrono::monotonic_clock::now();
+    auto end = std::chrono::steady_clock::now();
     auto diff = end - start;
     std::cout << "Nbr. of threads " << nbrOfThreads << " duration = " << std::chrono::duration <double, std::milli> (diff).count() << " ms" << std::endl;
   }
