@@ -4,6 +4,11 @@
 #include <random>
 #include <algorithm>
 
+// lttng-ust trace points
+#define TRACEPOINT_DEFINE
+#define TRACEPOINT_PROBE_DYNAMIC_LINKAGE
+#include "tp_PerlinNoise.h"
+
 // 99% OF THIS CODE IS A DIRECT TRANSLATION TO C++11 FROM THE REFERENCE
 // JAVA IMPLEMENTATION OF THE IMPROVED PERLIN FUNCTION (see http://mrl.nyu.edu/~perlin/noise/)
 // THE ORIGINAL JAVA IMPLEMENTATION IS COPYRIGHT 2002 KEN PERLIN
@@ -31,6 +36,7 @@ PerlinNoise::PerlinNoise() {
 	p.insert(p.begin(), pp, pp + 256);	
 	// Duplicate the permutation vector
 	p.insert(p.end(), p.begin(), p.end());
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,default_create);
 }
 
 // Generate a new permutation vector based on the value of seed
@@ -53,6 +59,7 @@ PerlinNoise::PerlinNoise(unsigned int seed) {
 
 	// Duplicate the permutation vector
 	p.insert(p.end(), p.begin(), p.end());
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,create,seed);
 }
 
 double PerlinNoise::noise(double x, double y, double z) const {
@@ -82,21 +89,30 @@ double PerlinNoise::noise(double x, double y, double z) const {
 
 	// Add blended results from 8 corners of cube
 	double res = lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x-1, y, z)), lerp(u, grad(p[AB], x, y-1, z), grad(p[BB], x-1, y-1, z))),	lerp(v, lerp(u, grad(p[AA+1], x, y, z-1), grad(p[BA+1], x-1, y, z-1)), lerp(u, grad(p[AB+1], x, y-1, z-1),	grad(p[BB+1], x-1, y-1, z-1))));
-	return (res + 1.0)/2.0;
+	res += 1.0;
+	res /= 2.0;
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,noise,x,y,z,res);
+	return res;
 }
 
 double PerlinNoise::fade(double t) const { 
-	return t * t * t * (t * (t * 6 - 15) + 10);
+	double res = t * t * t * (t * (t * 6 - 15) + 10);
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,fade,t,res);
+	return res;
 }
 
 double PerlinNoise::lerp(double t, double a, double b) const { 
-	return a + t * (b - a); 
+	double res = a + t * (b - a);
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,lerp,t,a,b,res);
+	return res;
 }
 
 double PerlinNoise::grad(int hash, double x, double y, double z) const {
 	int h = hash & 15;
-	// Convert lower 4 bits of hash inot 12 gradient directions
-	double u = h < 8 ? x : y,
-		   v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+	// Convert lower 4 bits of hash into 12 gradient directions
+	double u = h < 8 ? x : y;
+	double v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+	double res = ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+	tracepoint(com_vanwinkeljan_lttng_test_perlinnoise,grad,h,x,y,z,res);
+	return res;
 }

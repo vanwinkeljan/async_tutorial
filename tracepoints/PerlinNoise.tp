@@ -1,0 +1,93 @@
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  default_create,
+  TP_ARGS(),
+  TP_FIELDS()
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,default_create,TRACE_DEBUG_MODULE)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  create,
+  TP_ARGS(unsigned int, seed),
+  TP_FIELDS(
+    ctf_integer(unsigned int, seed, seed)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,create,TRACE_DEBUG_MODULE)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  debug_message,
+  TP_ARGS(const char *, text),
+  TP_FIELDS(
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,debug_message,TRACE_DEBUG)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  noise,
+  TP_ARGS(double, x,
+          double, y,
+          double, z,
+          double, r
+  ),
+  TP_FIELDS(
+    ctf_float(double, x, x)
+    ctf_float(double, y, y)
+    ctf_float(double, z, z)
+    ctf_float(double, result, r)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,noise,TRACE_DEBUG_MODULE)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  fade,
+  TP_ARGS(double, t,
+          double, r
+  ),
+  TP_FIELDS(
+    ctf_float(double, t, t)
+    ctf_float(double, result, r)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,fade,TRACE_DEBUG)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  lerp,
+  TP_ARGS(double, t,
+          double, a,
+          double, b,
+          double, r
+  ),
+  TP_FIELDS(
+    ctf_float(double, t, t)
+    ctf_float(double, a, a)
+    ctf_float(double, b, b)
+    ctf_float(double, result, r)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,lerp,TRACE_DEBUG)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_perlinnoise,
+  grad,
+  TP_ARGS(int, hash,
+          double, x,
+          double, y,
+          double, z,
+          double, r
+  ),
+  TP_FIELDS(
+    ctf_integer(int, hash, hash)
+    ctf_float(double, x, x)
+    ctf_float(double, y, y)
+    ctf_float(double, z, z)
+    ctf_float(double, result, r)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_perlinnoise,grad,TRACE_DEBUG)
