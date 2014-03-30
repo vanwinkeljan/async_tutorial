@@ -22,21 +22,21 @@ void generateNoise(const PerlinNoise& pn,
                    double z, 
                    ppm& image) {
 
-  
+  tracepoint(com_vanwinkeljan_lttng_test_main, generateNoise, thread,width, -1, -1, 0, "Entry");
+
   auto workHeight = height / nbrOfThreads;
- 
+  auto startHeight = (thread*workHeight);
+
   if(thread == (nbrOfThreads-1))
   {
     workHeight += height % nbrOfThreads;
   }
 
-  auto startHeight = (thread*workHeight);
   auto endHeight = startHeight+workHeight;
 
   auto px = startHeight*width;
 
-  //std::cout << "Thread: " << thread << "(Nbr of threads: " << nbrOfThreads << "), workHeight: " \
-  //  << workHeight << " startHeight: " << startHeight << " endHeight: " << endHeight << " px: " << px << std::endl;
+  tracepoint(com_vanwinkeljan_lttng_test_main, generateNoise, thread,width, startHeight, endHeight, px, "Work partitioned");
 
   // Visit every pixel in the specified range and assign a color generated with Perlin noise
   for(unsigned int i = startHeight; i < endHeight; ++i) {  // y
@@ -56,6 +56,8 @@ void generateNoise(const PerlinNoise& pn,
       ++px;
     }
   }
+
+  tracepoint(com_vanwinkeljan_lttng_test_main, generateNoise, thread,width, startHeight, endHeight, px, "Noise generated");
 }
 
 
@@ -66,6 +68,7 @@ void createImage( unsigned int nbrOfThreads,
                   unsigned int height, 
                   double z,
                   unsigned int seed = 237) {
+  tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Entry");
 
   // Create an empty PPM image
   ppm image(width, height);
@@ -78,11 +81,15 @@ void createImage( unsigned int nbrOfThreads,
  
   //start the first part in a auto mode (either deffered or async)
   futures.push_back(std::async(generateNoise,pn,width,height,0,nbrOfThreads,z,std::ref(image)));
+  tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Pushed async task");
 
   //all other parts will be started in async mode (new thread)
   for(auto thread = 1; thread < nbrOfThreads; ++thread) {
     futures.push_back(std::async(std::launch::async,generateNoise,pn,width,height,thread,nbrOfThreads,z,std::ref(image)));
+    tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Pushed async task");
   }
+
+  tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Wait for all threads");
 
   // wait for all the threads
   // Note that the first get call will execute a part of the work on the main thread
@@ -90,8 +97,12 @@ void createImage( unsigned int nbrOfThreads,
     e.get();
   }
 
+  tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Image generated, writing image to disk");
+
   // Save the image in a PPM file
-  image.write(fname);	
+  image.write(fname);
+
+  tracepoint(com_vanwinkeljan_lttng_test_main, createImage, nbrOfThreads, fname.c_str(), width, height, z, seed, "Image written to disk");
 }
 
 int main ( int arc, char **argv ) {

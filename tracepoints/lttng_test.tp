@@ -30,3 +30,47 @@ TRACEPOINT_EVENT(
   )
 )
 TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,debug_message,TRACE_DEBUG_MODULE)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_main,
+  createImage,
+  TP_ARGS(unsigned int, nbrOfThreads,
+          const char*, fname,
+          unsigned int, width,
+          unsigned int, height,
+          double, z,
+          unsigned int, seed,
+          const char *, text
+          ),
+  TP_FIELDS(
+    ctf_integer(unsigned int, nbrOfThreads,nbrOfThreads)
+    ctf_string(imgName, fname)
+    ctf_integer(unsigned int,imgWidth,width)
+    ctf_integer(unsigned int,imgHeight,height)
+    ctf_float(double,z,z)
+    ctf_integer(unsigned int,seed,seed)
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,createImage,TRACE_DEBUG_FUNCTION)
+
+TRACEPOINT_EVENT(
+  com_vanwinkeljan_lttng_test_main,
+  generateNoise,
+  TP_ARGS(unsigned int, thread,
+          unsigned int, width,
+          int, startHeight,
+          int, endHeight,
+          unsigned int, px,
+          const char *, text
+          ),
+  TP_FIELDS(
+    ctf_integer(unsigned int, threadId,thread)
+    ctf_integer(unsigned int,imgWidth,width)
+    ctf_integer(int,startHeight,startHeight)
+    ctf_integer(int,endHeight,endHeight)
+    ctf_integer(int,currentPixel,px)
+    ctf_string(message, text)
+  )
+)
+TRACEPOINT_LOGLEVEL(com_vanwinkeljan_lttng_test_main,generateNoise,TRACE_DEBUG_FUNCTION)
